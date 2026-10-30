@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "analytics-dashboard",
-  description: "analytics-dashboard",
+  title: "Analytics dashboard",
+  description: "Traffic, conversions and live visitors for your sites.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
