@@ -1,23 +1,18 @@
-'use client';
+import { connection } from 'next/server';
+import { Suspense } from 'react';
+import { Dashboard } from '@/components/dashboard';
 
-import { useEffect, useState } from 'react';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
+// The dashboard's date ranges are anchored to the current time, so the page is rendered per request
+// rather than prerendered at build time.
+async function RequestTimeDashboard() {
+  await connection();
+  return <Dashboard />;
+}
 
 export default function Home() {
-  const [health, setHealth] = useState<string>('checking...');
-
-  useEffect(() => {
-    fetch(`${API_URL}/health`)
-      .then((r) => r.json())
-      .then((d) => setHealth(`api ${d.status} / db ${d.db}`))
-      .catch(() => setHealth('api unreachable'));
-  }, []);
-
   return (
-    <main style={{ padding: 32, fontFamily: 'system-ui' }}>
-      <h1>analytics-dashboard</h1>
-      <p data-testid="health">{health}</p>
-    </main>
+    <Suspense fallback={<div className="app" />}>
+      <RequestTimeDashboard />
+    </Suspense>
   );
 }
